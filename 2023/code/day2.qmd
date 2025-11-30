@@ -1,0 +1,67 @@
+---
+format: gfm
+embed-resources: true
+warning: false
+---
+
+From the input below, pull out the number in `blue`, `green` and `red`. `;` separation should be stacked and counted towards the same game
+
+```{r}
+dat <- readLines("../inputs/day2.txt")
+
+head(dat)
+
+foo <- function(x){
+  x <- strsplit(x, ":")[[1]]
+  #id <- as.numeric(sub("Game ", "", x[1]))
+  draws <- strsplit(x[2], ";")[[1]]
+
+  bar <- function(draw){
+    draw <- strsplit(draw, ",")[[1]]
+    
+    blue <- draw[grepl("blue", draw)]
+    green <- draw[grepl("green", draw)]
+    red <- draw[grepl("red", draw)]
+
+    # \\D match everything up to non-digit, \\1 return digit
+    blue <- as.numeric(sub(".*\\D(\\d+).*", "\\1", blue))
+    green <- as.numeric(sub(".*\\D(\\d+).*", "\\1", green))
+    red <- as.numeric(sub(".*\\D(\\d+).*", "\\1", red))
+
+    blue <- ifelse(length(blue) == 0, 0, blue)
+    green <- ifelse(length(green) == 0, 0, green)
+    red <- ifelse(length(red) == 0, 0, red)
+
+    return(c(blue, green, red))
+  }
+
+  t(sapply(draws, bar))
+}
+
+# list
+l1 <- lapply(dat, foo)
+
+print(l1[1:2])
+
+# max: blue = 14, green = 13, red = 12
+# identify rows which > these values
+
+val <- sapply(l1, function(row){
+  any(row[,1] > 14 | row[,2] > 13 | row[,3] > 12)
+})
+
+rows <- 1:100
+
+# Answer, which games are POSSIBLE? Sum up
+sum(rows[!val])
+
+```
+
+Find the largest value of each column (in each game), multiply these three numbers. Sum everything up.
+
+```{r}
+val <- sapply(l1, function(row){
+  max(row[,1]) * max(row[,2]) * max(row[,3])
+})
+sum(val)
+```

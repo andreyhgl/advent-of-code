@@ -1,0 +1,15 @@
+---
+format: gfm
+embed-resources: true
+warning: false
+---
+
+In a 2 dimensional matrix, identify non-digit characters (not dots `.`). Save any number that is adjacent to a character (even diagonally). Sum them up.
+
+```{r}
+d <- readLines("../inputs/day3.txt")
+
+a <- d[2]
+q <- strsplit(a, "")[[1]]
+
+```
